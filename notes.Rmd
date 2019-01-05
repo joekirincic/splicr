@@ -1,0 +1,15 @@
+---
+title: "notes"
+author: "Joe Kirincic"
+date: "December 31, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 2018-12-31
+
+Consider refactoring `make_column_chooser_ui` almost entirely using rhandsontable. Less clutter,
+more powerful.
