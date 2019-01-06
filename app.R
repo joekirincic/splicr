@@ -43,7 +43,7 @@ splicr <- function(df1, df2){
                            br(),
                            br(),
                            rHandsontableOutput("rendered_mappings"),
-                           #uiOutput("make_column_chooser_ui"),
+                           #tags$style(HTML(".handsontable {overflow: visible;}")),
                            br(),
                            actionButton("merge_button", "Splice")
                            )),
@@ -57,8 +57,7 @@ splicr <- function(df1, df2){
       miniTabPanel("Analyze", icon = icon("eye"), 
                    miniContentPanel(uiOutput("error_plot_controls"),
                                     plotOutput("error_plot"),
-                                    hr(),
-                                    uiOutput("missing_data_summary")
+                                    hr()
                                     )
                    ),
       miniTabPanel("Export", icon = icon("download"), miniContentPanel("This is where the user would go to export stuff."))
@@ -180,15 +179,6 @@ splicr <- function(df1, df2){
         plot_errors(merged(), sym(input$error_plot_x), sym(input$error_plot_y), as.numeric(input$error_plot_threshold))
       })
       
-      missing_data_summary <- merged() %>% summarise_all(function(x){mean(is.null(.))})
-      
-      output$missing_data_summary <- renderTable(
-        missing_data_summary,
-        align = "c", 
-        bordered = TRUE, 
-        caption = "Missing Data Summary (%)", 
-        caption.placement = getOption("xtable.caption.placement", "top")
-        )
     })
     
     observeEvent(input$done, {
