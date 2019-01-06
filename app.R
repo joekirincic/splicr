@@ -1,11 +1,14 @@
 
 library(tidyverse)
+library(lubridate)
+library(rlang)
 library(shiny)
 library(miniUI)
 library(shinyjs)
 library(rhandsontable)
 source("utilities.R")
-options(bitmapType="cairo")
+source("plotting_functions.R")
+#options(bitmapType="cairo")
 
 raw_data <- tibble(
   entity_id = rep(1:3, 100),
@@ -71,6 +74,11 @@ splicr <- function(df1, df2){
     compare_cols <- reactiveVal(NULL)
     
     join_condition <- reactiveVal(NULL)
+    
+    output$rendered_mappings <- renderRHandsontable({rhandsontable(mappings(), rowHeaders = NULL) %>%
+        hot_col("ref_col", type = "dropdown", source = names(df1)) %>%
+        hot_col("map_type", type = "dropdown", source = c("join", "compare")) %>%
+        hot_col("test_col", type = "dropdown", source = names(df2))})
     
     observeEvent(input$add_mapping, {
       new_count <- total_mappings() + 1
