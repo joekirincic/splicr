@@ -6,9 +6,12 @@ library(shiny)
 library(miniUI)
 library(shinyjs)
 library(rhandsontable)
-source("utilities.R")
+source("merging_functions.R")
 source("plotting_functions.R")
-#options(bitmapType="cairo")
+
+if(Sys.info()["sysname"] == "windows"){
+  options(bitmapType="cairo")
+}
 
 raw_data <- tibble(
   entity_id = rep(1:3, 100),
