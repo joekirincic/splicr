@@ -1,0 +1,4 @@
+Name: splicR
+Description: Joins and analyzes discrepancies between two datasets  
+Binding: splicr
+Interactive: true
