@@ -36,7 +36,6 @@ splicr <- function(df1, df2){
       miniTabPanel("Combine", icon = icon("copy"),
                    # Sidebar with a slider input for number of bins
                    miniContentPanel(
-                     h1("Configure splicr for further analysis"),
                      sidebarLayout(
                        sidebarPanel(
                          fluidRow(
@@ -173,7 +172,7 @@ splicr <- function(df1, df2){
       output$error_plot_controls <- renderUI({
         fluidRow(
           column(4, selectInput("error_plot_x", label = "x-axis", choices = names(merged()))),
-          column(4, selectInput("error_plot_y", label = "y-axis", choices = names(merged()))),
+          column(4, selectInput("error_plot_y", label = "y-axis", choices = names(merged()) %>% `[`(str_detect(., "_diff")))),
           column(4, sliderInput("error_plot_threshold", label = "error threshold (absolute value)", min = 0, max = 10, value = 10))
         )
       })
