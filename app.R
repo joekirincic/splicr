@@ -61,8 +61,7 @@ splicr <- function(df1, df2){
                                     plotOutput("error_plot"),
                                     hr()
                                     )
-                   ),
-      miniTabPanel("Export", icon = icon("download"), miniContentPanel("This is where the user would go to export stuff."))
+                   )
     )
   )
   
