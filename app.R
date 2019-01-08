@@ -173,7 +173,7 @@ splicr <- function(df1, df2){
         fluidRow(
           column(4, selectInput("error_plot_x", label = "x-axis", choices = names(merged()))),
           column(4, selectInput("error_plot_y", label = "y-axis", choices = names(merged()) %>% `[`(str_detect(., "_diff")))),
-          column(4, sliderInput("error_plot_threshold", label = "error threshold (absolute value)", min = 0, max = 10, value = 10))
+          column(4, numericInput("error_plot_threshold", label = "error threshold (absolute value)", value = 1))
         )
       })
       

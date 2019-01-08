@@ -19,6 +19,6 @@ plot_errors <- function(df, x, y, threshold){
     geom_hline(yintercept = threshold, color = "green") +
     geom_hline(yintercept = -1*threshold, color = "green") +
     geom_rect(xmin = 0, xmax = 4, ymin = -1*threshold, ymax = threshold, fill = "yellowgreen", alpha = 0.01) +
-    ggtitle("Differences per entity", subtitle = glue::glue("Tolerance threshold = | {threshold} |")) +
+    ggtitle("Error plot") +
     theme_minimal()
 }
