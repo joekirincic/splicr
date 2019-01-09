@@ -14,5 +14,5 @@ Imports:
   rlang (>= 0.3.0.1),
   ggplot2 (>= 3.1.0),
   shiny (>= 1.2.0),
-  miniUI (>= 0.1.1),
+  miniUI (>= 0.1.1.1),
   rhandsontable (>= 0.3.7)
