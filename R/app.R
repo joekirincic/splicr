@@ -1,5 +1,11 @@
 # Main application
 
+# library(tidyverse)
+# library(rlang)
+# library(lubridate)
+# library(shiny)
+# library(miniUI)
+# library(rhandsontable)
 source("R/merging_functions.R")
 source("R/plotting_functions.R")
 
@@ -11,14 +17,20 @@ raw_data <- tibble(
   entity_id = rep(1:3, 100),
   entity_name = rep(c("A","B","C"), 100),
   date = as_date(now()) %>% seq(., . + days(99), "days") %>% rep(., 3),
-  metric_ref = rnorm(mean = 100, sd = 10, n = 300),
-  metric_test = metric_ref - rnorm(mean = 0, sd = 10, n = 300),
-  metric_diff = metric_ref - metric_test
+  metric1_ref = rnorm(mean = 100, sd = 10, n = 300),
+  metric1_test = metric1_ref - rnorm(mean = 0, sd = 10, n = 300),
+  metric1_diff = metric1_ref - metric1_test,
+  metric2_ref = rnorm(mean = 100, sd = 10, n = 300),
+  metric2_test = metric2_ref - rnorm(mean = 0, sd = 10, n = 300),
+  metric2_diff = metric2_ref - metric2_test,
+  metric3_ref = rnorm(mean = 100, sd = 10, n = 300),
+  metric3_test = metric3_ref - rnorm(mean = 0, sd = 10, n = 300),
+  metric3_diff = metric3_ref - metric3_test
 )
 
-df1 <- raw_data %>% select(-c(metric_test, metric_diff))
+df1 <- raw_data %>% select(-c(metric1_test, metric1_diff, metric2_test, metric2_diff, metric3_test, metric3_diff))
 
-df2 <- raw_data %>% select(-c(metric_ref, metric_diff))
+df2 <- raw_data %>% select(-c(metric1_ref, metric1_diff, metric2_ref, metric2_diff, metric3_ref, metric3_diff))
 
 splicr <- function(df1, df2){
   ui <- miniPage(
@@ -51,11 +63,16 @@ splicr <- function(df1, df2){
                    )
       )),
       miniTabPanel("Analyze", icon = icon("eye"), 
-                   miniContentPanel(uiOutput("error_plot_controls"),
-                                    plotOutput("error_plot"),
-                                    hr()
-                                    )
-                   )
+                   miniContentPanel(
+                     fillCol(
+                       h3("Errors - Summary Statistics"),
+                       tableOutput("error_summary_table"),
+                       br(),
+                       h3("Errors - Distribution Plot"),
+                       uiOutput("error_plot_controls"),
+                       plotOutput("error_plot")
+                       )
+                   ))
     )
   )
   
@@ -161,6 +178,18 @@ splicr <- function(df1, df2){
     })
     
     observeEvent(input$merge_button, {
+      
+      output$error_summary_table <- renderTable({
+        merged() %>% select(contains("_diff")) %>% gather(key = "column", value = "error") %>%
+          group_by(column) %>%
+          summarise(mean = mean(error, na.rm = TRUE),
+                    std = sd(error),
+                    min = min(error),
+                    Q1 = quantile(error, c(0.25)),
+                    Q2 = quantile(error, c(0.50)),
+                    Q3 = quantile(error, c(0.75)),
+                    max = max(error))
+      }, )
       
       output$error_plot_controls <- renderUI({
         fluidRow(
