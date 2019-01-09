@@ -170,10 +170,10 @@ splicr <- function(df1, df2){
         updated_mappings <- hot_to_r(input$rendered_mappings) %>% as_tibble(.)
         mappings(updated_mappings)
         output$rendered_mappings <- renderRHandsontable({rhandsontable(mappings(), rowHeaders = NULL) %>%
-            hot_col("ref_col", type = "dropdown", source = names(df1)) %>%
-            hot_col("map_type", type = "dropdown", source = c("join", "compare")) %>%
-            hot_col("test_col", type = "dropdown", source = names(df2))})
-        print(mappings())
+            hot_col("ref_col", type = "autocomplete", source = names(df1)) %>%
+            hot_col("map_type", type = "autocomplete", source = c("join", "compare")) %>%
+            hot_col("test_col", type = "autocomplete", source = names(df2))
+          })
       }
     })
     
@@ -189,7 +189,7 @@ splicr <- function(df1, df2){
                     Q2 = quantile(error, c(0.50)),
                     Q3 = quantile(error, c(0.75)),
                     max = max(error))
-      }, )
+      })
       
       output$error_plot_controls <- renderUI({
         fluidRow(
