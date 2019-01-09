@@ -1,11 +1,5 @@
+# Main application
 
-# library(tidyverse)
-# library(lubridate)
-# library(rlang)
-# library(shiny)
-# library(miniUI)
-# library(shinyjs)
-# library(rhandsontable)
 source("R/merging_functions.R")
 source("R/plotting_functions.R")
 
