@@ -1,12 +1,12 @@
 #library(tidyverse)
 
 column_overlap <- function(col1, col2){
-  result <- as.numeric(length(intersect(col1, col2))/length(union(col1, col2)))
+  result <- as.numeric(length(dplyr::intersect(col1, col2))/length(dplyr::union(col1, col2)))
   return(result)
 }
 
 get_overlap_scores <- function(col, candidates){
-  result <- map_dbl(.x = candidates, .f = column_overlap, col1 =  col) %>% set_names(., names(candidates))
+  result <- purrr::map_dbl(.x = candidates, .f = column_overlap, col1 =  col) %>% rlang::set_names(., names(candidates))
   return(result)
 }
 
@@ -19,7 +19,7 @@ name_similarity <- function(col1, col2){
 
 get_name_scores <- function(col, candidates){
   
-  result <- map_dbl(.x = candidates, .f = name_similarity, col1 = col) %>% set_names(., candidates)
+  result <- purrr::map_dbl(.x = candidates, .f = name_similarity, col1 = col) %>% rlang::set_names(., candidates)
   return(1/(result + 1))
   
 }
@@ -33,13 +33,13 @@ infer_join_condition <- function(df1, df2, excluding){
   # names. The column from Y with the maximum satisfaction score is paired with C. The conjunction of 
   # the set of all such pairs becomes the join condition.
   
-  join_cols <- df1 %>% select_if(.p = !(names(.) == excluding)) %>% names(.)
+  join_cols <- df1 %>% dplyr::select_if(.p = !(names(.) == excluding)) %>% names(.)
   
-  join_condition <- vector(mode = "character", length = length(join_cols)) %>% set_names(., join_cols)
+  join_condition <- vector(mode = "character", length = length(join_cols)) %>% rlang::set_names(., join_cols)
   
   for(i in seq_along(join_condition)){
     
-    overlap_scores <- get_overlap_scores(as_vector(df1[, i]), df2)
+    overlap_scores <- get_overlap_scores(rlang::as_vector(df1[, i]), df2)
     
     name_scores <- get_name_scores(names(df1)[i], names(df2))
     
@@ -59,7 +59,7 @@ square_distance <- function(col1, col2){
 
 get_square_distances <- function(col, candidates){
   
-  result <- map_dbl(.x = candidates, .f = square_distance, col1 = col)
+  result <- purrr::map_dbl(.x = candidates, .f = square_distance, col1 = col)
   return(result)
   
 }
@@ -69,16 +69,16 @@ infer_comparisons <- function(df, excluding){
   # Let's start by defining similarity in this context as
   # SS = min(SD + 1/(1 + LD)).
   
-  column_means <- df %>% select(-excluding) %>% summarise_all(mean)
+  column_means <- df %>% dplyr::select(-excluding) %>% dplyr::summarise_all(mean)
   
-  mappings <- vector(mode = "character", length(column_means)) %>% set_names(., names(column_means))
+  mappings <- vector(mode = "character", length(column_means)) %>% rlang::set_names(., names(column_means))
   
   for(col in names(mappings)){
     
-    others <- names(mappings) %>% '['(. != col)
+    others <- names(mappings) %>% `[`(. != col)
     
-    square_distances <- get_square_distances(as_vector(column_means[col]), select(column_means, -c(col)))
-    name_scores <- get_name_scores(col, names(select(column_means, -c(col))))
+    square_distances <- get_square_distances(rlang::as_vector(column_means[col]), dplyr::select(column_means, -c(col)))
+    name_scores <- get_name_scores(col, names(dplyr::select(column_means, -c(col))))
     similarity_score <- (square_distances + name_scores) %>% `[`(. == min(.)) %>% names(.)
     mappings[col] <- similarity_score
   }
@@ -88,8 +88,8 @@ infer_comparisons <- function(df, excluding){
 add_diff_cols <- function(df, comparisons){
   ref_cols <- names(comparisons)
   test_cols <- unname(comparisons)
-  diff_cols <- paste0(ref_cols, "_diff") %>% syms(.)
-  new_cols <- set_names(parse_exprs(paste0(ref_cols, " - ", "`", test_cols, "`")), diff_cols) %>% as_list(.)
-  result <- df %>% mutate(!!!new_cols)
+  diff_cols <- paste0(ref_cols, "_diff") %>% rlang::syms(.)
+  new_cols <- rlang::set_names(rlang::parse_exprs(paste0(ref_cols, " - ", "`", test_cols, "`")), diff_cols) %>% rlang::as_list(.)
+  result <- df %>% dplyr::mutate(!!!new_cols)
   return(result)
 }
