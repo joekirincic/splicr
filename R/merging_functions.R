@@ -39,7 +39,7 @@ infer_join_condition <- function(df1, df2, excluding){
   
   for(i in seq_along(join_condition)){
     
-    overlap_scores <- get_overlap_scores(rlang::as_vector(df1[, i]), df2)
+    overlap_scores <- get_overlap_scores(purrr::as_vector(df1[, i]), df2)
     
     name_scores <- get_name_scores(names(df1)[i], names(df2))
     
@@ -77,7 +77,7 @@ infer_comparisons <- function(df, excluding){
     
     others <- names(mappings) %>% `[`(. != col)
     
-    square_distances <- get_square_distances(rlang::as_vector(column_means[col]), dplyr::select(column_means, -c(col)))
+    square_distances <- get_square_distances(purrr::as_vector(column_means[col]), dplyr::select(column_means, -c(col)))
     name_scores <- get_name_scores(col, names(dplyr::select(column_means, -c(col))))
     similarity_score <- (square_distances + name_scores) %>% `[`(. == min(.)) %>% names(.)
     mappings[col] <- similarity_score

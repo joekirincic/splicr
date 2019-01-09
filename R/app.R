@@ -39,7 +39,7 @@ splicr <- function(df1, df2){
     miniUI::gadgetTitleBar("splicr"),
     
     miniUI::miniTabstripPanel(
-      miniUI::miniTabPanel("Combine", icon = icon("copy"),
+      miniUI::miniTabPanel("Combine", icon = shiny::icon("copy"),
                    # Sidebar with a slider input for number of bins
                    miniUI::miniContentPanel(
                      shiny::sidebarLayout(
@@ -62,9 +62,9 @@ splicr <- function(df1, df2){
                        )
                    )
       )),
-      miniUI::miniTabPanel("Analyze", icon = icon("eye"), 
+      miniUI::miniTabPanel("Analyze", icon = shiny::icon("eye"), 
                            miniUI::miniContentPanel(
-                             miniUI::fillCol(
+                             shiny::fillCol(
                                shiny::h3("Errors - Summary Statistics"),
                                shiny::tableOutput("error_summary_table"),
                                shiny::br(),
@@ -80,7 +80,7 @@ splicr <- function(df1, df2){
     
     total_mappings <- shiny::reactiveVal(1)
     
-    mappings <- shiny::reactiveVal(tibble(ref_col = names(df1)[1], map_type = c("compare"), test_col = c(names(df2)[1])))
+    mappings <- shiny::reactiveVal(tibble::tibble(ref_col = names(df1)[1], map_type = c("compare"), test_col = c(names(df2)[1])))
     
     compare_cols <- shiny::reactiveVal(NULL)
     
@@ -101,7 +101,7 @@ splicr <- function(df1, df2){
           rhandsontable::hot_col("ref_col", type = "dropdown", source = names(df1)) %>%
           rhandsontable::hot_col("map_type", type = "dropdown", source = c("join", "compare")) %>%
           rhandsontable::hot_col("test_col", type = "dropdown", source = names(df2))})
-      print(mappings())
+      
     })
     
     shiny::observeEvent(input$remove_mapping, {
@@ -114,7 +114,7 @@ splicr <- function(df1, df2){
           rhandsontable::hot_col("ref_col", type = "dropdown", source = names(df1)) %>%
           rhandsontable::hot_col("map_type", type = "dropdown", source = c("join", "compare")) %>%
           rhandsontable::hot_col("test_col", type = "dropdown", source = names(df2))})
-      print(mappings())
+      
     })
     
     observeEvent(input$reset_mappings, {
@@ -153,13 +153,13 @@ splicr <- function(df1, df2){
       mappings(updated_mappings)
       
       merged_init <- df1 %>% 
-        left_join(df2, by = rlang::set_names(join_condition()$test_col, join_condition()$ref_col))
+        dplyr::left_join(df2, by = rlang::set_names(join_condition()$test_col, join_condition()$ref_col))
       merged_final <- merged_init %>% add_diff_cols(., cc)
       return(merged_final)
     })
     
     shiny::observeEvent(input$merge_button, {
-      merged_mini <- merged() %>% dplyr::head(.) %>% dplyr::mutate_all(as.character)
+      merged_mini <- merged() %>% head(.) %>% dplyr::mutate_all(as.character)
       
       output$merged_glimpse <- shiny::renderTable(merged_mini, align = "c", bordered = TRUE)
       
@@ -180,7 +180,7 @@ splicr <- function(df1, df2){
     shiny::observeEvent(input$merge_button, {
       
       output$error_summary_table <- shiny::renderTable({
-        merged() %>% dplyr::select(contains("_diff")) %>% tidyr::gather(key = "column", value = "error") %>%
+        merged() %>% dplyr::select(dplyr::contains("_diff")) %>% tidyr::gather(key = "column", value = "error") %>%
           dplyr::group_by(column) %>%
           dplyr::summarise(mean = mean(error, na.rm = TRUE),
                     std = sd(error),
