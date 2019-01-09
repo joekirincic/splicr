@@ -6,8 +6,8 @@ library(shiny)
 library(miniUI)
 library(shinyjs)
 library(rhandsontable)
-source("merging_functions.R")
-source("plotting_functions.R")
+source("R/merging_functions.R")
+source("R/plotting_functions.R")
 
 if(Sys.info()["sysname"] == "windows"){
   options(bitmapType="cairo")
