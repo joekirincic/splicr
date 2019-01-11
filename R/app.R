@@ -86,7 +86,7 @@ splicr <- function(df1, df2){
     
     join_condition <- shiny::reactiveVal(NULL)
     
-    output$rendered_mappings <- rhandsontable::renderRHandsontable({rhandsontable::rhandsontable(mappings(), rowHeaders = NULL) %>%
+    output$rendered_mappings <- rhandsontable::renderRHandsontable({rhandsontable::rhandsontable(mappings(), rowHeaders = NULL, height = 300) %>%
         rhandsontable::hot_col("ref_col", type = "dropdown", source = names(df1)) %>%
         rhandsontable::hot_col("map_type", type = "dropdown", source = c("join", "compare")) %>%
         rhandsontable::hot_col("test_col", type = "dropdown", source = names(df2))})
@@ -97,7 +97,7 @@ splicr <- function(df1, df2){
       updated_mappings <- mappings() %>% tibble::add_row(ref_col = names(df1)[1], map_type = "compare", test_col = names(df2)[1])
       mappings(updated_mappings)
       compare_cols(mappings() %>% dplyr::filter(map_type == "compare"))
-      output$rendered_mappings <- rhandsontable::renderRHandsontable({rhandsontable::rhandsontable(mappings(), rowHeaders = NULL) %>%
+      output$rendered_mappings <- rhandsontable::renderRHandsontable({rhandsontable::rhandsontable(mappings(), rowHeaders = NULL, height = 300) %>%
           rhandsontable::hot_col("ref_col", type = "dropdown", source = names(df1)) %>%
           rhandsontable::hot_col("map_type", type = "dropdown", source = c("join", "compare")) %>%
           rhandsontable::hot_col("test_col", type = "dropdown", source = names(df2))})
@@ -110,7 +110,7 @@ splicr <- function(df1, df2){
       updated_mappings <- mappings()[1:new_count, ]
       mappings(updated_mappings)
       compare_cols(mappings() %>% dplyr::filter(map_type == "compare"))
-      output$rendered_mappings <- rhandsontable::renderRHandsontable({rhandsontable::rhandsontable(mappings(), rowHeaders = NULL) %>%
+      output$rendered_mappings <- rhandsontable::renderRHandsontable({rhandsontable::rhandsontable(mappings(), rowHeaders = NULL, height = 300) %>%
           rhandsontable::hot_col("ref_col", type = "dropdown", source = names(df1)) %>%
           rhandsontable::hot_col("map_type", type = "dropdown", source = c("join", "compare")) %>%
           rhandsontable::hot_col("test_col", type = "dropdown", source = names(df2))})
@@ -121,7 +121,7 @@ splicr <- function(df1, df2){
       total_mappings(1)
       mappings(tibble::tibble(ref_col = names(df1)[1], map_type = c("compare"), test_col = c(names(df2)[1])))
       compare_cols(NULL)
-      output$rendered_mappings <- rhandsontable::renderRHandsontable({rhandsontable::rhandsontable(mappings(), rowHeaders = NULL) %>%
+      output$rendered_mappings <- rhandsontable::renderRHandsontable({rhandsontable::rhandsontable(mappings(), rowHeaders = NULL, height = 300) %>%
           rhandsontable::hot_col("ref_col", type = "dropdown", source = names(df1)) %>%
           rhandsontable::hot_col("map_type", type = "dropdown", source = c("join", "compare")) %>%
           rhandsontable::hot_col("test_col", type = "dropdown", source = names(df2))})
@@ -169,7 +169,7 @@ splicr <- function(df1, df2){
       if (!is.null(input$rendered_mappings$changes$changes)) {
         updated_mappings <- rhandsontable::hot_to_r(input$rendered_mappings) %>% tibble::as_tibble(.)
         mappings(updated_mappings)
-        output$rendered_mappings <- rhandsontable::renderRHandsontable({rhandsontable::rhandsontable(mappings(), rowHeaders = NULL) %>%
+        output$rendered_mappings <- rhandsontable::renderRHandsontable({rhandsontable::rhandsontable(mappings(), rowHeaders = NULL, height = 300) %>%
             rhandsontable::hot_col("ref_col", type = "autocomplete", source = names(df1)) %>%
             rhandsontable::hot_col("map_type", type = "autocomplete", source = c("join", "compare")) %>%
             rhandsontable::hot_col("test_col", type = "autocomplete", source = names(df2))
