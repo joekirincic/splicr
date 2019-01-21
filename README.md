@@ -1,4 +1,4 @@
-# splicr <a><img src='https://github.com/joekirincic/splicr/blob/master/IMG_0469.PNG' align="right" height="139" /></a>
+# splicr <a><img src='https://github.com/joekirincic/splicr/blob/master/hexsticker2.png' align="right" height="139" /></a>
 
 Remember when the Golden State Warriors blew a 3-1 lead and the Cleveland Cavaliers won the 2016 NBA Championship?
 
